@@ -25,6 +25,8 @@ impl BitConvEndian for Big {
     fn as_endian() -> Endian { Endian::BE }
 }
 
+impl BitConvEndian for Native {}
+
 macro_rules! BitConvImpl {
     ($type:ty, $generic:ty, $data:tt, $start:tt, $error_message:expr) => {{
         let f = match <$generic>::as_endian() {
