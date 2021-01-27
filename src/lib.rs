@@ -1,3 +1,4 @@
+#![no_std]
 use core::{convert::TryInto, mem};
 use endian::*;
 
