@@ -1,0 +1,12 @@
+[package]
+name = "bitconv"
+version = "0.1.0"
+authors = ["inspier <devdevin541@gmail.com>"]
+edition = "2018"
+documentation = "https://docs.rs/bitconv"
+repository = "https://github.com/inspier/bitconv"
+description = "A simple, zero-dependency, no_std compatible Rust equivalent to the C# BitConverter class."
+license = "MIT"
+keywords = ["binary", "byte", "endian", "big-endian", "little-endian"]
+categories = ["no-std"]
+readme = "README.md"
