@@ -15,14 +15,17 @@ pub mod endian {
 }
 
 pub trait BitConvEndian {
+    #[inline]
     fn as_endian() -> Endian { Endian::NE }
 }
 
 impl BitConvEndian for Little {
+    #[inline]
     fn as_endian() -> Endian { Endian::LE }
 }
 
 impl BitConvEndian for Big {
+    #[inline]
     fn as_endian() -> Endian { Endian::BE }
 }
 
