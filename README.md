@@ -7,7 +7,7 @@ A simple, zero-dependency, no_std compatible Rust equivalent to the C# BitConver
 
 To add to your Cargo.toml:
 ```toml
-bitconv = "0.1.2"
+bitconv = "0.1.3"
 ```
 
 ## Example
