@@ -26,7 +26,7 @@ impl BitConvEndian for Big {
 }
 
 macro_rules! BitConvImpl {
-    ($type:ty, $generic:ty, $data:tt, $start:tt) => {{
+    ($type:ty, $generic:ty, $data:tt, $start:tt, $error_message:expr) => {{
         let f = match <$generic>::as_endian() {
             Endian::LE => <$type>::from_le_bytes,
             Endian::BE => <$type>::from_be_bytes,
@@ -36,9 +36,20 @@ macro_rules! BitConvImpl {
             .get($start..)
             .and_then(|bytes| bytes.get(..mem::size_of::<$type>()))
             .map(|bytes| f(bytes.try_into().unwrap()))
-            .expect(&format!("Failed to read {}. Invalid buffer provided.", stringify!($type)))
+            .expect($error_message)
     }};
 }
+
+// Not elegant compared to using format! and stringify!,
+// but this way inlines correctly.
+const ERROR_MESSAGES: [&str; 6] = [
+    "Failed to read i16. Invalid buffer provided.",
+    "Failed to read i32. Invalid buffer provided.",
+    "Failed to read i64. Invalid buffer provided.",
+    "Failed to read u16. Invalid buffer provided.",
+    "Failed to read u32. Invalid buffer provided.",
+    "Failed to read u64. Invalid buffer provided.",
+];
 
 /// Returns a 16-bit signed integer converted from two bytes at a specified
 /// position in a byte array.
@@ -56,8 +67,9 @@ macro_rules! BitConvImpl {
 /// assert_eq!(-256, to_int16::<Little>(&buffer, 2));
 /// assert_eq!(255, to_int16::<Big>(&buffer, 2));
 /// ```
+#[inline]
 pub fn to_int16<T: BitConvEndian>(data: &[u8], start_index: usize) -> i16 {
-    BitConvImpl!(i16, T, data, start_index)
+    BitConvImpl!(i16, T, data, start_index, ERROR_MESSAGES[0])
 }
 
 /// Returns a 32-bit signed integer converted from four bytes at a specified
@@ -76,8 +88,9 @@ pub fn to_int16<T: BitConvEndian>(data: &[u8], start_index: usize) -> i16 {
 /// assert_eq!(-265875328, to_int32::<Little>(&buffer, 3));
 /// assert_eq!(-2146424848, to_int32::<Big>(&buffer, 3));
 /// ```
+#[inline]
 pub fn to_int32<T: BitConvEndian>(data: &[u8], start_index: usize) -> i32 {
-    BitConvImpl!(i32, T, data, start_index)
+    BitConvImpl!(i32, T, data, start_index, ERROR_MESSAGES[1])
 }
 
 /// Returns a 64-bit signed integer converted from eight bytes at a specified
@@ -96,8 +109,9 @@ pub fn to_int32<T: BitConvEndian>(data: &[u8], start_index: usize) -> i32 {
 /// assert_eq!(-1019801265028202496, to_int64::<Little>(&buffer, 1));
 /// assert_eq!(140806877927665, to_int64::<Big>(&buffer, 1));
 /// ```
+#[inline]
 pub fn to_int64<T: BitConvEndian>(data: &[u8], start_index: usize) -> i64 {
-    BitConvImpl!(i64, T, data, start_index)
+    BitConvImpl!(i64, T, data, start_index, ERROR_MESSAGES[2])
 }
 
 /// Returns a 16-bit unsigned integer converted from two bytes at a specified
@@ -116,8 +130,9 @@ pub fn to_int64<T: BitConvEndian>(data: &[u8], start_index: usize) -> i64 {
 /// assert_eq!(65280, to_uint16::<Little>(&buffer, 2));
 /// assert_eq!(255, to_uint16::<Big>(&buffer, 2));
 /// ```
+#[inline]
 pub fn to_uint16<T: BitConvEndian>(data: &[u8], start_index: usize) -> u16 {
-    BitConvImpl!(u16, T, data, start_index)
+    BitConvImpl!(u16, T, data, start_index, ERROR_MESSAGES[3])
 }
 
 /// Returns a 32-bit unsigned integer converted from four bytes at a specified
@@ -136,8 +151,9 @@ pub fn to_uint16<T: BitConvEndian>(data: &[u8], start_index: usize) -> u16 {
 /// assert_eq!(261888, to_uint32::<Little>(&buffer, 6));
 /// assert_eq!(16712448, to_uint32::<Big>(&buffer, 6));
 /// ```
+#[inline]
 pub fn to_uint32<T: BitConvEndian>(data: &[u8], start_index: usize) -> u32 {
-    BitConvImpl!(u32, T, data, start_index)
+    BitConvImpl!(u32, T, data, start_index, ERROR_MESSAGES[4])
 }
 
 /// Returns a 64-bit unsigned integer converted from eight bytes at a specified
@@ -156,8 +172,9 @@ pub fn to_uint32<T: BitConvEndian>(data: &[u8], start_index: usize) -> u32 {
 /// assert_eq!(255, to_uint64::<Little>(&buffer, 2));
 /// assert_eq!(18374686479671623680, to_uint64::<Big>(&buffer, 2));
 /// ```
+#[inline]
 pub fn to_uint64<T: BitConvEndian>(data: &[u8], start_index: usize) -> u64 {
-    BitConvImpl!(u64, T, data, start_index)
+    BitConvImpl!(u64, T, data, start_index, ERROR_MESSAGES[5])
 }
 
 #[cfg(test)]
