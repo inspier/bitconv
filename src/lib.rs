@@ -15,25 +15,22 @@ pub mod endian {
 }
 
 pub trait BitConvEndian {
-    #[inline]
-    fn as_endian() -> Endian { Endian::NE }
+    const ENDIANNESS: Endian = Endian::NE;
 }
 
 impl BitConvEndian for Little {
-    #[inline]
-    fn as_endian() -> Endian { Endian::LE }
+    const ENDIANNESS: Endian = Endian::LE;
 }
 
 impl BitConvEndian for Big {
-    #[inline]
-    fn as_endian() -> Endian { Endian::BE }
+    const ENDIANNESS: Endian = Endian::BE;
 }
 
 impl BitConvEndian for Native {}
 
 macro_rules! BitConvImpl {
     ($type:ty, $generic:ty, $data:tt, $start:tt, $error_message:expr) => {{
-        let f = match <$generic>::as_endian() {
+        let f = match <$generic>::ENDIANNESS {
             Endian::LE => <$type>::from_le_bytes,
             Endian::BE => <$type>::from_be_bytes,
             Endian::NE => <$type>::from_ne_bytes,
