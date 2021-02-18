@@ -39,20 +39,9 @@ macro_rules! BitConvImpl {
             .get($start..)
             .and_then(|bytes| bytes.get(..mem::size_of::<$type>()))
             .map(|bytes| f(bytes.try_into().unwrap()))
-            .expect($error_message)
+            .expect(concat!("Failed to read ", stringify!($type), ". Invalid buffer provided."))
     }};
 }
-
-// Not elegant compared to using format! and stringify!,
-// but this way inlines correctly.
-const ERROR_MESSAGES: [&str; 6] = [
-    "Failed to read i16. Invalid buffer provided.",
-    "Failed to read i32. Invalid buffer provided.",
-    "Failed to read i64. Invalid buffer provided.",
-    "Failed to read u16. Invalid buffer provided.",
-    "Failed to read u32. Invalid buffer provided.",
-    "Failed to read u64. Invalid buffer provided.",
-];
 
 /// Returns a 16-bit signed integer converted from two bytes at a specified
 /// position in a byte array.
