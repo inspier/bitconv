@@ -29,7 +29,7 @@ impl BitConvEndian for Big {
 impl BitConvEndian for Native {}
 
 macro_rules! BitConvImpl {
-    ($type:ty, $generic:ty, $data:tt, $start:tt, $error_message:expr) => {{
+    ($type:ty, $generic:ty, $data:tt, $start:tt) => {{
         let f = match <$generic>::ENDIANNESS {
             Endian::LE => <$type>::from_le_bytes,
             Endian::BE => <$type>::from_be_bytes,
@@ -61,7 +61,7 @@ macro_rules! BitConvImpl {
 /// ```
 #[inline]
 pub fn to_int16<T: BitConvEndian>(data: &[u8], start_index: usize) -> i16 {
-    BitConvImpl!(i16, T, data, start_index, ERROR_MESSAGES[0])
+    BitConvImpl!(i16, T, data, start_index)
 }
 
 /// Returns a 32-bit signed integer converted from four bytes at a specified
@@ -82,7 +82,7 @@ pub fn to_int16<T: BitConvEndian>(data: &[u8], start_index: usize) -> i16 {
 /// ```
 #[inline]
 pub fn to_int32<T: BitConvEndian>(data: &[u8], start_index: usize) -> i32 {
-    BitConvImpl!(i32, T, data, start_index, ERROR_MESSAGES[1])
+    BitConvImpl!(i32, T, data, start_index)
 }
 
 /// Returns a 64-bit signed integer converted from eight bytes at a specified
@@ -103,7 +103,7 @@ pub fn to_int32<T: BitConvEndian>(data: &[u8], start_index: usize) -> i32 {
 /// ```
 #[inline]
 pub fn to_int64<T: BitConvEndian>(data: &[u8], start_index: usize) -> i64 {
-    BitConvImpl!(i64, T, data, start_index, ERROR_MESSAGES[2])
+    BitConvImpl!(i64, T, data, start_index)
 }
 
 /// Returns a 16-bit unsigned integer converted from two bytes at a specified
@@ -124,7 +124,7 @@ pub fn to_int64<T: BitConvEndian>(data: &[u8], start_index: usize) -> i64 {
 /// ```
 #[inline]
 pub fn to_uint16<T: BitConvEndian>(data: &[u8], start_index: usize) -> u16 {
-    BitConvImpl!(u16, T, data, start_index, ERROR_MESSAGES[3])
+    BitConvImpl!(u16, T, data, start_index)
 }
 
 /// Returns a 32-bit unsigned integer converted from four bytes at a specified
@@ -145,7 +145,7 @@ pub fn to_uint16<T: BitConvEndian>(data: &[u8], start_index: usize) -> u16 {
 /// ```
 #[inline]
 pub fn to_uint32<T: BitConvEndian>(data: &[u8], start_index: usize) -> u32 {
-    BitConvImpl!(u32, T, data, start_index, ERROR_MESSAGES[4])
+    BitConvImpl!(u32, T, data, start_index)
 }
 
 /// Returns a 64-bit unsigned integer converted from eight bytes at a specified
@@ -166,7 +166,7 @@ pub fn to_uint32<T: BitConvEndian>(data: &[u8], start_index: usize) -> u32 {
 /// ```
 #[inline]
 pub fn to_uint64<T: BitConvEndian>(data: &[u8], start_index: usize) -> u64 {
-    BitConvImpl!(u64, T, data, start_index, ERROR_MESSAGES[5])
+    BitConvImpl!(u64, T, data, start_index)
 }
 
 #[cfg(test)]
